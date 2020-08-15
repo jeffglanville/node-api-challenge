@@ -1,5 +1,5 @@
 const express = require("express")
-const projects = require("")
+const projects = require("../data/helpers/projectModel")
 
 const router = express.Router()
 
@@ -79,6 +79,52 @@ router.post("/projects/:id/actions", (req,res) => {
         console.log(err)
         res.status(500).json({
             message: "There was an error while saving the action to the database"
+        })
+    })
+})
+
+router.put("/projects/:id", (req,res) => {
+    if (!req.body.name || !req.body.description){
+        return res.status(400).json({
+            message: "Please provide a name and description for the project."
+        })
+    }
+
+    projects.update(req.params.id, req.params.body)
+    ,then((project) => {
+        if (project) {
+            res.status(200).json(project)
+        }else {
+            res.status(404).json({
+                message: "The project with the specified id does not exist."
+            })
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            message: "The project information could not be modified"
+        })
+    })
+})
+
+router.delete("/projects/:id", (req,res) => {
+    projects.remove(req.params.id)
+    .then((id) => {
+        if (id > 0) {
+            res.status(200).json({
+                message: "The project has been deleted"
+            })
+        }else {
+            res.status(404).json({
+                message: "The project with the specified id does not exist"
+            })
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            message: "The project could not be removed"
         })
     })
 })
