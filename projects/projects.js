@@ -3,6 +3,19 @@ const projects = require("../data/helpers/projectModel")
 
 const router = express.Router()
 
+router.get("/projects", (req,res) => {
+    projects.get(req.query)
+    .then((projects) => {
+        res.status(200).json(projects)
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            errorMessage: "The projects information could not be retrieved."
+        })
+    })
+})
+
 router.get("/projects/:id", (req,res) => {
     projects.get(req.params.id)
     .then((project) => {
@@ -28,7 +41,7 @@ router.get("/projects/:id/actions", (req,res) => {
             message: "The project with the specified id could not be found."
         })
     }
-    projects.getProjectAction(req.params.id)
+    projects.getProjectActions(req.params.id)
     .then((actions) => {
         res.json(actions)
     })
@@ -41,7 +54,7 @@ router.get("/projects/:id/actions", (req,res) => {
 })
 
 router.post("/projects", (req, res) => {
-    if(!req.body.name || !req.ody.description) {
+    if(!req.body.name || !req.body.description) {
         return res.status(400).json({
             message: "Please provide a name and description for the project"
         })
@@ -128,3 +141,5 @@ router.delete("/projects/:id", (req,res) => {
         })
     })
 })
+
+module.exports = router

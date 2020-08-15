@@ -3,6 +3,19 @@ const actions = require("../data/helpers/actionModel")
 
 const router = express.Router()
 
+router.get("/actions", (req,res) => {
+    actions.get(req.query)
+    .then((actions) => {
+        res.status(200).json(actions)
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).json({
+            errorMessage: "The actions information could not be retrieved."
+        })
+    })
+})
+
 router.get("/actions/:id", (req,res) => {
     actions.get(req.params.id)
     .then((action) => {
@@ -92,3 +105,5 @@ router.delete("/actions/:id", (req, res) => {
         })
     })
 })
+
+module.exports = router
