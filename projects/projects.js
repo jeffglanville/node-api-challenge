@@ -3,23 +3,11 @@ const projects = require("../data/helpers/projectModel")
 
 const router = express.Router()
 
-router.get("/projects", (req,res) => {
-    projects.get(req.query)
-    .then((projects) => {
-        res.status(200).json(projects)
-    })
-    .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-            errorMessage: "The projects information could not be retrieved."
-        })
-    })
-})
 
 router.get("/projects/:id", (req,res) => {
     projects.get(req.params.id)
     .then((project) => {
-        if (project.length == 0) {
+        if (!project) {
             res.status(400).json({
                 message: "The project with the specified id does not exist."
             })
@@ -84,7 +72,7 @@ router.post("/projects/:id/actions", (req,res) => {
         })
     }
 
-    project.insert(req.params.id, req.body)
+    projects.insert(req.params.id, req.body)
     .then((action) => {
         res.status(200).json(action)
     })

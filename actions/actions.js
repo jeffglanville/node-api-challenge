@@ -3,23 +3,11 @@ const actions = require("../data/helpers/actionModel")
 
 const router = express.Router()
 
-router.get("/actions", (req,res) => {
-    actions.get(req.query)
-    .then((actions) => {
-        res.status(200).json(actions)
-    })
-    .catch((err) => {
-        console.log(err)
-        res.status(500).json({
-            errorMessage: "The actions information could not be retrieved."
-        })
-    })
-})
 
 router.get("/actions/:id", (req,res) => {
     actions.get(req.params.id)
     .then((action) => {
-        if (action.length == 0) {
+        if (!action) {
             res.status(404).json({
                 message: "The action with the specified id does not exist"
             })
@@ -44,7 +32,7 @@ router.post("/actions/:id", (req,res) => {
 
     if (!req.body.description || !req.body.notes) {
         return res.status(400).json({
-            message: "Please provide text and description for the action."
+            message: "Please provide description and notes for the action."
         })
     }
 
