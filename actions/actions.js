@@ -23,8 +23,8 @@ router.get("/actions/:id", (req,res) => {
     })
 })
 
-router.post("/actions/:id", (req,res) => {
-    if (!req.params.id) {
+router.post("/actions/:project_id", (req,res) => {
+    if (!req.params.project_id) {
         return res.status(404).json({
             message: "The action with the specified id does not exist."
         })
@@ -35,8 +35,8 @@ router.post("/actions/:id", (req,res) => {
             message: "Please provide description and notes for the action."
         })
     }
-
-    actions.insert({project_id: req.params.id, ...req.body})
+//{project_id: req.params.id, ...req.body}
+    actions.insert(req.params.project_id, req.body)
     .then((action) => {
         res.status(201).json(action)
     })
